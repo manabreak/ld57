@@ -276,6 +276,14 @@ func change_level() -> void:
 
 
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("cycle_selection"):
+		current_selection += 1
+		if current_selection >= $Cubes.get_child_count():
+			current_selection = 0
+		cube_clicked($Cubes.get_children().get(current_selection))
+	elif Input.is_action_just_pressed("clear_selection"):
+		unselect()
+	
 	if current_selection >= 0:
 		var cube = $Cubes.get_child(current_selection)
 		var global_pos = cube.global_position
