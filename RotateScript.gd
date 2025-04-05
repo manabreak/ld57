@@ -8,6 +8,7 @@ const STEP = 45.0
 var start_orientation: Vector3
 
 signal rotated(RotateScript)
+signal clicked(RotateScript)
 
 ## The correct solution orientation
 var solution: Quaternion = Quaternion.IDENTITY
@@ -15,7 +16,12 @@ var solution: Quaternion = Quaternion.IDENTITY
 ## Slerp target
 var target_rotation: Quaternion = Quaternion.IDENTITY
 
+var selected = false
+
 func _process(delta: float) -> void:
+	if not selected:
+		return
+	
 	if Input.is_action_just_pressed("rotate_down"):
 		rotate_down()
 		debug_print()
@@ -28,6 +34,34 @@ func _process(delta: float) -> void:
 	elif Input.is_action_just_pressed("rotate_right"):
 		rotate_right()
 		debug_print()
+	elif Input.is_action_just_pressed("move_up"):
+		move_up()
+	elif Input.is_action_just_pressed("move_down"):
+		move_down()
+	elif Input.is_action_just_pressed("move_left"):
+		move_left()
+	elif Input.is_action_just_pressed("move_right"):
+		move_right()
+
+
+func move_up() -> void:
+	position.y += 0.5
+	emit_signal("rotated", self)
+
+
+func move_down() -> void:
+	position.y -= 0.5
+	emit_signal("rotated", self)
+
+
+func move_left() -> void:
+	position.x -= 0.5
+	emit_signal("rotated", self)
+
+
+func move_right() -> void:
+	position.x += 0.5
+	emit_signal("rotated", self)
 
 
 func debug_print():
@@ -72,3 +106,9 @@ func rotate_right() -> void:
 	# print("Rotate right")
 	target_rotation = Quaternion(Vector3.UP, deg_to_rad(STEP)) * target_rotation
 	emit_signal("rotated", self)
+
+
+func _on_input_event(camera: Node, event: InputEvent, event_position: Vector3, normal: Vector3, shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.is_pressed():
+		print("Clicked a cube at index " + str(get_index()))
+		emit_signal("clicked", self)

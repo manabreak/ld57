@@ -1,16 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://kf060nswrhuh"]
+[gd_scene load_steps=6 format=3 uid="uid://kf060nswrhuh"]
 
 [ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_pyidc"]
 [ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_pyidc"]
 [ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_vvh5c"]
+[ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_28aoi"]
 
 [sub_resource type="Environment" id="Environment_vvh5c"]
 background_mode = 1
 ambient_light_source = 2
 ambient_light_color = Color(1, 1, 1, 1)
 
-[node name="Root" type="Node3D"]
+[node name="Root" type="Node3D" node_paths=PackedStringArray("selection_sprite")]
 script = ExtResource("1_pyidc")
+selection_sprite = NodePath("CanvasLayer/SelectionSprite")
 cube_scene = ExtResource("2_pyidc")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
@@ -19,10 +21,17 @@ visible = false
 sky_mode = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.2575)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 environment = SubResource("Environment_vvh5c")
 projection = 1
 size = 8.0
+far = 100.0
 
 [node name="Cubes" type="Node3D" parent="."]
 script = ExtResource("3_vvh5c")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="SelectionSprite" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(0.690196, 1, 0.654902, 1)
+texture = ExtResource("4_28aoi")
