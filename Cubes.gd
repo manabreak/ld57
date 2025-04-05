@@ -4,11 +4,12 @@ extends Node3D
 const SPEED = 5.0
 const STEP = 90.0
 
+var rot_index: int = 0
 
 @export
 var start_orientation: Vector3
 
-signal rotated(Cubes)
+signal rotated(int)
 
 ## The correct solution orientation
 var solution: Quaternion = Quaternion.IDENTITY
@@ -19,24 +20,12 @@ var target_rotation: Quaternion = Quaternion.IDENTITY
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("container_left"):
 		rotate_left()
-		debug_print()
 	elif Input.is_action_just_pressed("container_right"):
 		rotate_right()
-		debug_print()
-
-
-func debug_print():
-	# print("- Orientation now: " + str(target_rotation))
-	# print("- Solution: " + str(solution))
-	
-	var target_euler = target_rotation.get_euler()
-	var solution_euler = solution.get_euler()
-	# print("- Orientation euler: " + str(target_euler))
-	# print("- Solution euler: " + str(solution_euler))
-	
-	var angles = Vector3(rad_to_deg(target_euler.x), rad_to_deg(target_euler.y), rad_to_deg(target_euler.z))
-	# print("Target angles: " + str(angles))
-	
+	#elif Input.is_action_just_pressed("container_up"):
+	#	rotate_up()
+	#elif Input.is_action_just_pressed("container_down"):
+	#	rotate_down()
 
 
 func _physics_process(delta: float) -> void:
@@ -45,25 +34,21 @@ func _physics_process(delta: float) -> void:
 	transform.basis = Basis(new_quat)
 
 
-func rotate_down() -> void:
-	# print("Rotate down")
-	target_rotation = Quaternion(Vector3.RIGHT, deg_to_rad(STEP)) * target_rotation
-	emit_signal("rotated", self)
-
-
-func rotate_up() -> void:
-	# print("Rotate up")
-	target_rotation = Quaternion(Vector3.RIGHT, deg_to_rad(-STEP)) * target_rotation
-	emit_signal("rotated", self)
-
-
 func rotate_left() -> void:
-	# print("Rotate left")
 	target_rotation = Quaternion(Vector3.UP, deg_to_rad(-STEP)) * target_rotation
-	emit_signal("rotated", self)
+	var euler = target_rotation.get_euler()
+	rot_index -= 1
+	if rot_index < 0:
+		rot_index = 3
+	print("Container Y rot: " + str(rad_to_deg(euler.y)))
+	emit_signal("rotated", rot_index)
 
 
 func rotate_right() -> void:
-	# print("Rotate right")
 	target_rotation = Quaternion(Vector3.UP, deg_to_rad(STEP)) * target_rotation
-	emit_signal("rotated", self)
+	var euler = target_rotation.get_euler()
+	rot_index += 1
+	if rot_index > 3:
+		rot_index = 0
+	print("Container Y rot: " + str(rad_to_deg(euler.y)))
+	emit_signal("rotated", rot_index)

@@ -51,8 +51,16 @@ func _ready() -> void:
 	scale_tween.tween_property(selection_sprite, "scale", Vector2(0.55, 0.55), 1.65).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	scale_tween.tween_property(selection_sprite, "scale", Vector2(0.65, 0.65), 1.65).set_ease(Tween.EASE_IN_OUT).set_trans(Tween.TRANS_SINE)
 	
+	$Cubes.rotated.connect(self.container_rotated)
+	
 	load_level(1)
 	# $TestCube.solution = Quaternion(Vector3.RIGHT, deg_to_rad(45.0)) * Quaternion(Vector3.UP, deg_to_rad(45.0))
+
+
+func container_rotated(rot_index: int) -> void:
+	print("Container rotation now: " + str(rot_index * 90))
+	for cube in $Cubes.get_children():
+		cube.container_rot_index = rot_index
 
 
 func load_level(level: int) -> void:
