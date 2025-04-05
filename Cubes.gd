@@ -16,6 +16,7 @@ var solution: Quaternion = Quaternion.IDENTITY
 
 ## Slerp target
 var target_rotation: Quaternion = Quaternion.IDENTITY
+var slerping = true
 
 func _process(delta: float) -> void:
 	if Input.is_action_just_pressed("container_left"):
@@ -29,6 +30,9 @@ func _process(delta: float) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if not slerping:
+		return
+	
 	var current_quat = transform.basis.get_rotation_quaternion()
 	var new_quat = current_quat.slerp(target_rotation, delta * SPEED)
 	transform.basis = Basis(new_quat)

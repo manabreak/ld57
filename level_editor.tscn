@@ -1,0 +1,104 @@
+[gd_scene load_steps=8 format=3 uid="uid://c8doxassgmjo0"]
+
+[ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_miuv6"]
+[ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_4farl"]
+[ext_resource type="Script" uid="uid://umefapykmq2f" path="res://Editor.gd" id="3_4farl"]
+[ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_u007t"]
+[ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_v0uwa"]
+
+[sub_resource type="Environment" id="Environment_vvh5c"]
+background_mode = 1
+ambient_light_source = 2
+ambient_light_color = Color(1, 1, 1, 1)
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_miuv6"]
+viewport_path = NodePath("SubViewport")
+
+[node name="LevelEditor" type="Node3D" node_paths=PackedStringArray("selection_sprite")]
+script = ExtResource("1_miuv6")
+selection_sprite = NodePath("CanvasLayer/SelectionSprite")
+cube_scene = ExtResource("2_4farl")
+
+[node name="Editor" type="Node3D" parent="." node_paths=PackedStringArray("add_button", "remove_button", "print_button")]
+script = ExtResource("3_4farl")
+add_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer/AddButton")
+remove_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer/RemoveButton")
+print_button = NodePath("../CanvasLayer/DebugMenu/PrintSolutionButton")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+environment = SubResource("Environment_vvh5c")
+projection = 1
+size = 8.0
+far = 100.0
+
+[node name="Cubes" type="Node3D" parent="."]
+script = ExtResource("3_u007t")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+own_world_3d = true
+transparent_bg = true
+render_target_clear_mode = 1
+render_target_update_mode = 1
+
+[node name="SubRoot" type="Node3D" parent="SubViewport"]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewport/SubRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
+environment = SubResource("Environment_vvh5c")
+projection = 1
+size = 8.0
+far = 100.0
+
+[node name="Cubes" type="Node3D" parent="SubViewport/SubRoot"]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="SelectionSprite" type="Sprite2D" parent="CanvasLayer"]
+modulate = Color(0.690196, 1, 0.654902, 1)
+texture = ExtResource("4_v0uwa")
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 276.0
+offset_bottom = 387.0
+
+[node name="TextureRect" type="TextureRect" parent="CanvasLayer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("ViewportTexture_miuv6")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="DebugMenu" type="VBoxContainer" parent="CanvasLayer"]
+custom_minimum_size = Vector2(260, 0)
+offset_right = 40.0
+offset_bottom = 40.0
+alignment = 1
+
+[node name="AddRemoveLabel" type="Label" parent="CanvasLayer/DebugMenu"]
+layout_mode = 2
+text = "Add / Remove cubes"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/DebugMenu"]
+layout_mode = 2
+
+[node name="AddButton" type="Button" parent="CanvasLayer/DebugMenu/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Add"
+
+[node name="RemoveButton" type="Button" parent="CanvasLayer/DebugMenu/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Remove
+selected"
+
+[node name="PrintSolutionButton" type="Button" parent="CanvasLayer/DebugMenu"]
+layout_mode = 2
+text = "Print Solution"
