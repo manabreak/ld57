@@ -17,12 +17,22 @@ var solution: Quaternion = Quaternion.IDENTITY
 ## Slerp target
 var target_rotation: Quaternion = Quaternion.IDENTITY
 var slerping = true
+var rotation_enabled = false
+
+func enable_rotation() -> void:
+	rotation_enabled = true
+
+
+func disable_rotation() -> void:
+	rotation_enabled = false
+
 
 func _process(delta: float) -> void:
-	if Input.is_action_just_pressed("container_left"):
-		rotate_left()
-	elif Input.is_action_just_pressed("container_right"):
-		rotate_right()
+	if rotation_enabled:
+		if Input.is_action_just_pressed("container_left"):
+			rotate_left()
+		elif Input.is_action_just_pressed("container_right"):
+			rotate_right()
 	#elif Input.is_action_just_pressed("container_up"):
 	#	rotate_up()
 	#elif Input.is_action_just_pressed("container_down"):

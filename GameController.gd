@@ -23,7 +23,40 @@ const LEVELS = [
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			}
 		]
+	},
+	{
+		"name": "Level name here",
+		"targets": [
+			{
+				"pos": "(2.5, 0.0, 0.0)",
+				"rot": "(-0.146446, 0.853554, -0.353553, 0.353553)"
+			},
+			{
+				"pos": "(0.0, 0.0, 0.0)",
+				"rot": "(-0.0, 1, 0.0, -0.0)"
+			}
+		],
+		"container_rot_index": 1
+	},
+	{
+		"name": "Level name here",
+		"targets": [
+			{
+				"pos": "(0.0, 1.0, -1.0)",
+				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
+			},
+			{
+				"pos": "(0.0, -1.0, 1.0)",
+				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
+			},
+			{
+				"pos": "(0.0, 0.0, 0.0)",
+				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
+			}
+		],
+		"container_rot_index": 3
 	}
+
 ]
 
 @export
@@ -50,14 +83,24 @@ func _ready() -> void:
 	
 	$Cubes.rotated.connect(self.container_rotated)
 	
-	load_level(0)
-	# $TestCube.solution = Quaternion(Vector3.RIGHT, deg_to_rad(45.0)) * Quaternion(Vector3.UP, deg_to_rad(45.0))
+	if find_child("Editor") != null:
+		$CanvasLayer/Control/TextureRect.visible = false
+		$Cubes.enable_rotation()
+		$Cubes.slerping = true
+	else:
+		load_level(0)
 
 
 func container_rotated(rot_index: int) -> void:
-	print("Container rotation now: " + str(rot_index * 90))
 	for cube in $Cubes.get_children():
 		cube.container_rot_index = rot_index
+	$CanvasLayer/UI/HBoxContainer/VBoxContainer/RotIndexLabel.text = "Rot index: " + str(rot_index)
+	
+	var level_complete = check_if_level_complete()
+	print("Level complete? " + str(level_complete))
+	
+	if level_complete and find_child("Editor") == null:
+		change_level()
 
 
 func load_level(level: int) -> void:
@@ -73,6 +116,15 @@ func load_level(level: int) -> void:
 	
 	var data = LEVELS[current_level]
 	print("Level name: " + str(data["name"]))
+	
+	var has_rot_index = data.has("container_rot_index")
+	print("Allow rotation of container? " + str(has_rot_index))
+	if has_rot_index == true:
+		$Cubes.enable_rotation()
+	else:
+		$Cubes.disable_rotation()
+	$Cubes.rot_index = 0
+	$Cubes.target_rotation = Quaternion.IDENTITY
 	
 	var targets = data["targets"]
 	print("Target object count: " + str(targets.size()))
@@ -91,28 +143,30 @@ func load_level(level: int) -> void:
 		var cube = cube_scene.instantiate() as RotateScript
 		cube.position = pos
 		cube.solution = quat
+		cube.container_rot_index = 0
 		cube.rotated.connect(self.cube_rotated)
 		cube.clicked.connect(self.cube_clicked)
 		$Cubes.add_child(cube)
 		cube_states.append(false)
 	
-	render_solution()
+	render_solution(int(data.get("container_rot_index", 0)))
 	
-	$Cubes.rotation.x = 0.0
-	$Cubes.rotation.y = -PI * 2.0
-	$Cubes.scale = Vector3(0, 0, 0)
-	
-	var timer = get_tree().create_timer(2.0)
-	await timer.timeout
-	
-	var tween = create_tween()
-	tween.tween_property($Cubes, "rotation:y", 0.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	tween.parallel()
-	tween.tween_property($Cubes, "scale", Vector3(1, 1, 1), 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
-	tween.parallel()
-	tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE)
-	
-	await tween.finished
+	if find_child("Editor") == null:
+		$Cubes.rotation.x = 0.0
+		$Cubes.rotation.y = -PI * 1.5
+		$Cubes.scale = Vector3(0, 0, 0)
+		
+		var timer = get_tree().create_timer(2.0)
+		await timer.timeout
+		
+		var tween = create_tween()
+		tween.tween_property($Cubes, "rotation:y", 0.0, 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tween.parallel()
+		tween.tween_property($Cubes, "scale", Vector3(1, 1, 1), 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
+		tween.parallel()
+		tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE)
+		
+		await tween.finished
 	$Cubes.slerping = true
 
 
@@ -135,9 +189,10 @@ func remove_selected_cube() -> void:
 		current_selection = -1
 
 
-func render_solution() -> void:
+func render_solution(rot_index: int) -> void:
 	$SubViewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	var container = $SubViewport/SubRoot/Cubes as Node3D
+	container.rotation.y = rot_index * deg_to_rad(90)
 	
 	for child in container.get_children():
 		container.remove_child(child)
@@ -175,7 +230,7 @@ func cube_rotated(cube: RotateScript) -> void:
 	var level_complete = check_if_level_complete()
 	print("Level complete? " + str(level_complete))
 	
-	if level_complete:
+	if level_complete and find_child("Editor") == null:
 		change_level()
 
 
@@ -251,7 +306,9 @@ func check_if_level_complete() -> bool:
 	for state in cube_states:
 		if state == false:
 			return false
-	return true
+	
+	var data = LEVELS[current_level]
+	return $Cubes.rot_index == int(LEVELS[current_level].get("container_rot_index", 0))
 
 
 func is_correct(cube: RotateScript) -> bool:
@@ -272,4 +329,6 @@ func print_level() -> void:
 			c["pos"] = str(cube.position)
 			c["rot"] = str(cube.transform.basis.get_rotation_quaternion())
 			o["targets"].append(c)
+	
+	o["container_rot_index"] = $Cubes.rot_index
 	print(str(o))

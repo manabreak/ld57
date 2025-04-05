@@ -56,12 +56,26 @@ func move_down() -> void:
 
 
 func move_left() -> void:
-	position.x -= 0.5
+	if container_rot_index == 0:
+		position.x -= 0.5
+	elif container_rot_index == 1:
+		position.z -= 0.5
+	elif container_rot_index == 2:
+		position.x += 0.5
+	elif container_rot_index == 3:
+		position.z += 0.5
 	emit_signal("rotated", self)
 
 
 func move_right() -> void:
-	position.x += 0.5
+	if container_rot_index == 0:
+		position.x += 0.5
+	elif container_rot_index == 1:
+		position.z += 0.5
+	elif container_rot_index == 2:
+		position.x -= 0.5
+	elif container_rot_index == 3:
+		position.z -= 0.5
 	emit_signal("rotated", self)
 
 
