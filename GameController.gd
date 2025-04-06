@@ -3,7 +3,6 @@ extends Node3D
 
 const LEVELS = [
 	{
-		"name": "Level 1",
 		"targets": [
 			{
 				"pos": "(0.0, 0.0, 0.0)",
@@ -12,7 +11,6 @@ const LEVELS = [
 		]
 	},
 	{
-		"name": "Level name here",
 		"targets": [
 			{
 				"pos": "(-3.0, 0.0, -3.0)",
@@ -25,7 +23,6 @@ const LEVELS = [
 		]
 	},
 	{
-		"name": "Level name here",
 		"targets": [
 			{
 				"pos": "(2.5, 0.0, 0.0)",
@@ -39,7 +36,6 @@ const LEVELS = [
 		"container_rot_index": 1
 	},
 	{
-		"name": "Level name here",
 		"targets": [
 			{
 				"pos": "(0.0, 1.0, -1.0)",
@@ -57,7 +53,6 @@ const LEVELS = [
 		"container_rot_index": 3
 	},
 	{
-		"name": "Level name here",
 		"targets": [
 			{
 				"pos": "(1.5, 1.5, 0.0)",
@@ -218,7 +213,6 @@ func load_level(level: int) -> void:
 	cube_states.clear()
 	
 	var data = LEVELS[current_level]
-	print("Level name: " + str(data["name"]))
 	
 	var has_rot_index = data.has("container_rot_index")
 	print("Allow rotation of container? " + str(has_rot_index))
@@ -383,13 +377,14 @@ func change_level() -> void:
 		var title_end_tween = create_tween()
 		title_end_tween.tween_property(title_label, "visible_ratio", 1.0, 2.0)
 		
-		await show_message("You have performed adequately during your assessment.\nThe results will be used to calibrate your NCP score.")
-		await get_tree().create_timer(2.0).timeout
 		var end_tween = create_tween()
 		end_tween.set_parallel()
 		end_tween.tween_property(main_ui, "modulate:a", 0.0, 2.0)
 		end_tween.tween_property(title_label, "modulate:a", 0.0, 2.2)
-		await show_message("You are dismissed.\nThank you for your participation.")
+		
+		await show_message("You have performed adequately during your assessment.\nThe results will be used to calibrate your NCP score.")
+		await get_tree().create_timer(2.0).timeout
+		await show_message("You are dismissed.\nThank you for your participation.", 4.0)
 	
 
 
@@ -442,12 +437,12 @@ func is_correct(cube: RotateScript) -> bool:
 	var target = cube_targets[index] as Quaternion
 	var quat = cube.target_rotation
 	
-	return quat.is_equal_approx(target)
+	return abs(quat.dot(target)) >= 1.0 - 0.001
+	# return quat.is_equal_approx(target)
 
 
 func print_level() -> void:
 	var o = {}
-	o["name"] = "Level name here"
 	o["targets"] = []
 	for cube in $Cubes.get_children():
 		if cube is Node3D:
