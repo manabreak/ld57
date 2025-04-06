@@ -15,7 +15,7 @@ const LEVELS = [
 	{ "targets": [{ "type": "cylinder", "pos": "(-1.5, 1.5, 0.0)", "rot": "(-0.653281, -0.270598, 0.270598, 0.653282)" }, { "type": "cube", "pos": "(1.5, -1.5, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(1.5, -0.5, 1.0)", "rot": "(0.270599, 0.653281, 0.653281, 0.270598)" }, { "type": "cube", "pos": "(-1.5, 0.5, -1.0)", "rot": "(0.5, 0.5, -0.5, -0.5)" }], "container_rot_index": 2 },
 	{ "targets": [{ "type": "cube", "pos": "(1.5, -0.5, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(-1.5, 0.5, 0.0)", "rot": "(-0.0, -0.707107, 0.707107, 0.0)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.0, -0.0, -0.382683, 0.92388)" }], "container_rot_index": 2 },
 	{ "targets": [{ "type": "cube", "pos": "(1.5, 0.0, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(-1.5, 0.0, 0.0)", "rot": "(0.0, -0.0, -0.382683, 0.92388)" }, { "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(-0.146447, 0.353554, 0.353553, 0.853553)" }, { "type": "cylinder", "pos": "(-1.5, 1.5, 0.0)", "rot": "(0.5, 0.5, 0.5, 0.5)" }], "container_rot_index": 2 },
-	{ "targets": [{ "type": "cone", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.0, 0.707107, -0.0, 0.707107)" }, { "type": "cube", "pos": "(1.0, 0.0, 0.0)", "rot": "(0.707107, -0.0, -0.707106, -0.0)" }, { "type": "cube", "pos": "(-1.0, 0.0, 0.0)", "rot": "(-0.707107, 0.0, 0.707107, -0.0)" }], "container_rot_index": 0 },
+	{ "targets": [{ "type": "cone", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.0, 0.707107, -0.0, 0.707107)" }, { "type": "cube", "pos": "(1.0, 0.0, 0.0)", "rot": "(0.707107, -0.0, -0.707106, -0.0)" }, { "type": "cube", "pos": "(-1.0, 0.0, 1.0)", "rot": "(-0.707107, 0.0, 0.707107, -0.0)" }], "container_rot_index": 0 },
 	{ "targets": [{ "type": "cone", "pos": "(0.0, 1.0, 0.0)", "rot": "(0.5, 0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(0.5, 0.0, 0.0)", "rot": "(0.5, -0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(-0.5, 0.0, 0.0)", "rot": "(-0.5, -0.5, 0.5, -0.5)" }, { "type": "cube", "pos": "(0.0, -1.0, 0.0)", "rot": "(-0.5, 0.5, -0.5, 0.5)" }], "container_rot_index": 1 },
 	{ "targets": [{ "type": "cone", "pos": "(0.0, 0.0, -1.0)", "rot": "(0.707107, -0.707106, 0.0, 0.0)" }, { "type": "cube", "pos": "(0.5, 0.0, 0.0)", "rot": "(0.5, -0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(-0.5, 0.0, 0.0)", "rot": "(-0.5, -0.5, 0.5, -0.5)" }, { "type": "cube", "pos": "(0.0, 0.0, 1.0)", "rot": "(-0.707107, 0.707107, 0.0, -0.0)" }], "container_rot_index": 3 },
 	{ "targets": [{ "type": "cylinder", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.382683, 0, 0, 0.92388)" }, { "type": "cube", "pos": "(1.5, 0.0, 0.0)", "rot": "(0.653281, 0.653281, -0.270599, 0.270598)" }, { "type": "cube", "pos": "(0.0, 0.0, 1.5)", "rot": "(0.270598, 0.653281, 0.653282, 0.270598)" }], "container_rot_index": 1 }
@@ -84,7 +84,7 @@ func start_script_seq() -> void:
 	var tween = create_tween()
 	tween.tween_property(title_label, "visible_ratio", 1.0, 2.0)
 	
-	await tween.finished
+	await tween.finishedd
 	await pause(1.0)
 	
 	await show_message("Welcome, initiate LD57/HUMAN_42069.\nToday, you are participating in our\nneural conditioning program, or NCP for short.")
@@ -119,7 +119,7 @@ func pause(time: float = 2.0) -> Signal:
 
 var desc_label_tween: Tween = null
 
-func show_message(text: String, time: float = 1.0) -> Signal:
+func show_message(text: String, time: float = 6.0) -> Signal:
 	if desc_label_tween != null:
 		desc_label_tween.stop()
 	
@@ -145,7 +145,11 @@ func show_level_completion_message() -> Signal:
 		2:
 			await show_message("Recalibrating baseline...", 2.0)
 			await pause()
-			return show_message("Baseline recalibrated.\nProceed with the next assignment.", 4.0)
+			await show_message("ALERT - ALERT - ALERT", 1.0)
+			await pause(1.0)
+			await show_message("PREMISES BREACHED", 1.0)
+			await pause(0.5)
+			return show_message("Ignore the previous alert.\nBaseline recalibrated.\nProceed with the next assignment.", 6.0)
 		3:
 			await show_message("Improved depth perception capabilities recognized.\nIncreasing assessment difficulty...")
 			await pause()
@@ -161,6 +165,36 @@ func show_level_completion_message() -> Signal:
 			return show_message("Employee is performing adequately.")
 		7:
 			return show_message("The performance of HUMAN_42069 might be statistically significant.\nMore results are needed.")
+		8:
+			return show_message("Employee classification re-assessed.\nPrevious class: D. Current class: C.")
+		9:
+			$CanvasLayer/UI.target_hr = 120
+			return show_message("Assessment score 50 reached.\nEmployee is still performing adequately.")
+		10:
+			return show_message("Vitals show significant stress.\nEmployee is provided with a simplified puzzle.\nThis incident will be logged.")
+		11:
+			$CanvasLayer/UI.target_hr = 100
+			return show_message("Vitals normalizing.\nResuming pre-configured assessment routine.")
+		12:
+			return show_message("Employee is performing above average.\nIntroducing new shape.")
+		13:
+			await show_message("New shape 'cone' recognized.\nProceeding with the assessment routine.")
+			await pause()
+			await show_message("// ERROR: BACKUP SYSTEM DOWN //\nCAUSE: UNKNOWN", 2.0)
+			await pause()
+			return show_message("Please ignore the previous message.\nContinue with your assessment.")
+		14:
+			$CanvasLayer/UI.target_hr = 120
+			await show_message("ALERT - ALERT - ALERT", 1.0)
+			await pause()
+			await show_message("EVACUATE PREMISES", 1.0)
+			await pause()
+			return show_message("Please continue with your assessment.", 5.0)
+		15:
+			$CanvasLayer/UI.target_hr = 140
+			await show_message("CARBON MONOXIDE LEVELS CRITICAL", 1.0)
+			await pause()
+			return show_message("Remain calm.\nThe execution of the assessment is your top priority.", 5.0)
 	return get_tree().create_timer(0.1).timeout
 
 
@@ -435,6 +469,8 @@ func _process(delta: float) -> void:
 		unselect()
 	elif Input.is_action_just_pressed("reset"):
 		load_level(current_level)
+	#elif Input.is_action_just_pressed("skip"):
+	#	change_level()
 	
 	if current_selection >= 0:
 		var cube = $Cubes.get_child(current_selection)
