@@ -1,28 +1,38 @@
-[gd_scene load_steps=9 format=3 uid="uid://kf060nswrhuh"]
+[gd_scene load_steps=12 format=3 uid="uid://kf060nswrhuh"]
 
 [ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_pyidc"]
 [ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_pyidc"]
+[ext_resource type="Environment" uid="uid://bsujjcienvhi4" path="res://assets/env.tres" id="3_l8v81"]
 [ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_vvh5c"]
 [ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_28aoi"]
 [ext_resource type="Theme" uid="uid://bp8bw3kss3ym2" path="res://assets/theme.tres" id="5_jnlp7"]
-
-[sub_resource type="Environment" id="Environment_vvh5c"]
-background_mode = 1
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
-
-[sub_resource type="Environment" id="Environment_28aoi"]
-background_mode = 1
-ambient_light_source = 2
-ambient_light_color = Color(1, 1, 1, 1)
+[ext_resource type="Shader" uid="uid://cp7brdoqgajcj" path="res://Vignette.gdshader" id="7_vyht1"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_28aoi"]
 viewport_path = NodePath("SubViewport")
 
-[node name="Root" type="Node3D" node_paths=PackedStringArray("selection_sprite")]
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_vyht1"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_bf3um"]
+noise = SubResource("FastNoiseLite_vyht1")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bf3um"]
+shader = ExtResource("7_vyht1")
+shader_parameter/dr = Vector2(1, 0)
+shader_parameter/dg = Vector2(0, 1)
+shader_parameter/db = Vector2(-1, 0)
+shader_parameter/width = 0.3
+shader_parameter/height = 0.4
+shader_parameter/curvature = 2.51
+shader_parameter/noise_texture = SubResource("NoiseTexture2D_bf3um")
+
+[node name="Root" type="Node3D" node_paths=PackedStringArray("selection_sprite", "main_ui", "title_label", "desc_label")]
 script = ExtResource("1_pyidc")
 selection_sprite = NodePath("CanvasLayer/SelectionSprite")
 cube_scene = ExtResource("2_pyidc")
+main_ui = NodePath("CanvasLayer/UI/HBoxContainer")
+title_label = NodePath("CanvasLayer/UI/MarginContainer/LevelName")
+desc_label = NodePath("CanvasLayer/UI/DialogueMargins/DialogueLabel")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(0.866025, 0.433013, 0.25, -0.5, 0.75, 0.433013, 0, -0.5, 0.866025, 0, 0.537146, 1.2575)
@@ -31,7 +41,7 @@ sky_mode = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 10)
-environment = SubResource("Environment_vvh5c")
+environment = ExtResource("3_l8v81")
 projection = 1
 size = 10.0
 far = 100.0
@@ -49,7 +59,7 @@ render_target_update_mode = 1
 
 [node name="Camera3D" type="Camera3D" parent="SubViewport/SubRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
-environment = SubResource("Environment_28aoi")
+environment = ExtResource("3_l8v81")
 projection = 1
 size = 8.0
 far = 100.0
@@ -60,6 +70,7 @@ far = 100.0
 
 [node name="SelectionSprite" type="Sprite2D" parent="CanvasLayer"]
 modulate = Color(0.690196, 1, 0.654902, 1)
+position = Vector2(40, 119)
 texture = ExtResource("4_28aoi")
 
 [node name="UI" type="Control" parent="CanvasLayer"]
@@ -100,11 +111,10 @@ theme_override_constants/margin_right = 20
 theme_override_constants/margin_bottom = 20
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer"]
-visible = false
 custom_minimum_size = Vector2(192, 192)
 layout_mode = 2
 mouse_filter = 1
-color = Color(0.558965, 0.389506, 0.500099, 1)
+color = Color(0.226862, 0.193208, 0.183853, 0.372549)
 
 [node name="TargetRect" type="TextureRect" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer"]
 custom_minimum_size = Vector2(192, 192)
@@ -112,11 +122,6 @@ layout_mode = 2
 texture = SubResource("ViewportTexture_28aoi")
 expand_mode = 4
 stretch_mode = 5
-
-[node name="RotIndexLabel" type="Label" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-text = "RotIndex: 0"
-horizontal_alignment = 1
 
 [node name="Control" type="Control" parent="CanvasLayer/UI/HBoxContainer"]
 layout_mode = 2
@@ -134,5 +139,38 @@ theme_override_constants/margin_top = 20
 [node name="LevelName" type="Label" parent="CanvasLayer/UI/MarginContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 32
-text = "Hello, World"
+text = "// ASSESS/0.1/LD57/PARTICIPANT_00"
 horizontal_alignment = 1
+
+[node name="DialogueMargins" type="MarginContainer" parent="CanvasLayer/UI"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="DialogueLabel" type="Label" parent="CanvasLayer/UI/DialogueMargins"]
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 2
+text = "Begin assessment."
+horizontal_alignment = 1
+max_lines_visible = 3
+visible_characters_behavior = 2
+
+[node name="PP" type="CanvasLayer" parent="."]
+
+[node name="Vignette" type="ColorRect" parent="PP"]
+material = SubResource("ShaderMaterial_bf3um")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

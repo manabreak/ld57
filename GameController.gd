@@ -55,8 +55,25 @@ const LEVELS = [
 			}
 		],
 		"container_rot_index": 3
+	},
+	{
+		"name": "Level name here",
+		"targets": [
+			{
+				"pos": "(1.5, 1.5, 0.0)",
+				"rot": "(0.0, 0.92388, -0.0, 0.382683)"
+			},
+			{
+				"pos": "(0.0, 0.0, 0.0)",
+				"rot": "(0.653282, 0.653281, 0.270598, 0.270598)"
+			},
+			{
+				"pos": "(-1.5, -1.5, 1.5)",
+				"rot": "(0.923879, 0.0, 0.382684, 0.0)"
+			}
+		],
+		"container_rot_index": 1
 	}
-
 ]
 
 @export
@@ -64,6 +81,15 @@ var selection_sprite: Sprite2D
 
 @export
 var cube_scene: PackedScene
+
+@export
+var main_ui: Control
+
+@export
+var title_label: Label
+
+@export
+var desc_label: Label
 
 var current_level: int = 0
 
@@ -88,13 +114,90 @@ func _ready() -> void:
 		$Cubes.enable_rotation()
 		$Cubes.slerping = true
 	else:
-		load_level(0)
+		start_script_seq()
+		# load_level(0)
+
+
+func start_script_seq() -> void:
+	main_ui.modulate.a = 0.0
+	title_label.text = ""
+	desc_label.text = ""
+	
+	await pause(2.0)
+	
+	## First message
+	
+	title_label.visible_ratio = 0.0
+	title_label.text = "//ASSESSMENT/LD57/HUMAN_42069/INIT"
+	
+	var tween = create_tween()
+	tween.tween_property(title_label, "visible_ratio", 1.0, 2.0)
+	
+	await tween.finished
+	await pause(1.0)
+	
+	await show_message("Welcome, initiate LD57/HUMAN_42069.\nToday, you are participating in our\nneural conditioning program, or NCP for short.")
+	await pause(2.0)
+	await show_message("During NCP, your capabilities concerning depth perception are analyzed.\nAll adequately performing individuals will be rewarded.")
+	await pause(2.0)
+	await show_message("It is expected that approximately 57% of participants will fail the assessment.\nAll failures will go on your permanent record.")
+	await pause(2.0)
+	await show_message("Beginning baseline calibration...", 3.0)
+	await pause(2.0)
+	
+	tween = create_tween()
+	tween.tween_property(main_ui, "modulate:a", 1.0, 3.0).set_trans(Tween.TRANS_SPRING)
+	await tween.finished
+	
+	await show_message("Baseline calibrated.\nLoading assessments and relevant instructions...", 4.0)
+	load_level(0)
+	await pause(2.0)
+	await show_message("Note: If you require assistance, refer to your employee manual.\nYou have received your manual during your orientation.")
+	await pause(2.0)
+	await show_message("If you do not have your employee manual,\nreport to the sanctioning committee immediately.")
+	await pause(2.0)
+	await show_message("Your assignments are shown on the left side of the screen.\nTo pass an assignment, manipulate the view on the right side\nto match the assignment.")
+	await pause(2.0)
+	await show_message("Use mouse to select an object.\nUse W/A/S/D or arrow keys to manipulate the object.")
+	await pause(2.0)
+
+
+func pause(time: float) -> Signal:
+	return get_tree().create_timer(time).timeout
+
+
+func show_message(text: String, time: float = 8.0) -> Signal:
+	desc_label.visible_ratio = 0.0
+	desc_label.text = text
+	var tween = create_tween()
+	tween.tween_property(desc_label, "visible_ratio", 1.0, time)
+	return tween.finished
+
+
+func show_level_completion_message() -> Signal:
+	match current_level:
+		0:
+			await show_message("Completing the first task took you\n48% longer compared to an average individual.\nThis performance will be logged.")
+			await pause(2.0)
+			return show_message("Proceed with the next assignment.\nYou can use TAB key to cycle the selections.", 5.0)
+		1:
+			await show_message("Your relative performance seemed to slightly improve.", 4.0)
+			await pause(2.0)
+			return show_message("The next assignment requires you to manipulate\nall objects at the same time.\nUse Q and E keys to perform this.")
+		2:
+			await show_message("Recalibrating baseline...", 2.0)
+			await pause(2.0)
+			return show_message("Baseline recalibrated.\nProceed with the next assignment.", 4.0)
+		3:
+			await show_message("Improved depth perception capabilities recognized.\nIncreasing assessment difficulty...")
+			await pause(2.0)
+			return show_message("Employee capability class increased.\nPrevious class: F. Current class: D.")
+	return get_tree().create_timer(0.1).timeout
 
 
 func container_rotated(rot_index: int) -> void:
 	for cube in $Cubes.get_children():
 		cube.container_rot_index = rot_index
-	$CanvasLayer/UI/HBoxContainer/VBoxContainer/RotIndexLabel.text = "Rot index: " + str(rot_index)
 	
 	var level_complete = check_if_level_complete()
 	print("Level complete? " + str(level_complete))
@@ -269,9 +372,24 @@ func change_level() -> void:
 	# $Cubes.rotation.y = 0.0
 	# $Cubes.scale = Vector3(1, 1, 1)
 	if current_level < LEVELS.size() - 1:
+		await show_level_completion_message()
 		load_level(current_level + 1)
 	else:
 		print("All levels completed!")
+		
+		title_label.visible_ratio = 0.0
+		title_label.text = "//ASSESSMENT/LD57/HUMAN_42069/COMPLETE"
+		
+		var title_end_tween = create_tween()
+		title_end_tween.tween_property(title_label, "visible_ratio", 1.0, 2.0)
+		
+		await show_message("You have performed adequately during your assessment.\nThe results will be used to calibrate your NCP score.")
+		await get_tree().create_timer(2.0).timeout
+		var end_tween = create_tween()
+		end_tween.set_parallel()
+		end_tween.tween_property(main_ui, "modulate:a", 0.0, 2.0)
+		end_tween.tween_property(title_label, "modulate:a", 0.0, 2.2)
+		await show_message("You are dismissed.\nThank you for your participation.")
 	
 
 
