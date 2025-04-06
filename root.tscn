@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://kf060nswrhuh"]
+[gd_scene load_steps=14 format=3 uid="uid://kf060nswrhuh"]
 
 [ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_pyidc"]
 [ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_pyidc"]
+[ext_resource type="PackedScene" uid="uid://c4ckh07pqlucb" path="res://ColorCylinder.tscn" id="3_bf3um"]
 [ext_resource type="Environment" uid="uid://bsujjcienvhi4" path="res://assets/env.tres" id="3_l8v81"]
 [ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_vvh5c"]
 [ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_28aoi"]
@@ -9,7 +10,10 @@
 [ext_resource type="Shader" uid="uid://cp7brdoqgajcj" path="res://Vignette.gdshader" id="7_vyht1"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_28aoi"]
-viewport_path = NodePath("SubViewport")
+viewport_path = NodePath("SubViewportFront")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_bf3um"]
+viewport_path = NodePath("SubViewportRight")
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_vyht1"]
 
@@ -21,15 +25,16 @@ shader = ExtResource("7_vyht1")
 shader_parameter/dr = Vector2(1, 0)
 shader_parameter/dg = Vector2(0, 1)
 shader_parameter/db = Vector2(-1, 0)
-shader_parameter/width = 0.3
-shader_parameter/height = 0.4
-shader_parameter/curvature = 2.51
+shader_parameter/width = 0.5
+shader_parameter/height = 0.7
+shader_parameter/curvature = 2.01
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_bf3um")
 
 [node name="Root" type="Node3D" node_paths=PackedStringArray("selection_sprite", "main_ui", "title_label", "desc_label")]
 script = ExtResource("1_pyidc")
 selection_sprite = NodePath("CanvasLayer/SelectionSprite")
 cube_scene = ExtResource("2_pyidc")
+cylinder_scene = ExtResource("3_bf3um")
 main_ui = NodePath("CanvasLayer/UI/HBoxContainer")
 title_label = NodePath("CanvasLayer/UI/MarginContainer/LevelName")
 desc_label = NodePath("CanvasLayer/UI/DialogueMargins/DialogueLabel")
@@ -49,22 +54,39 @@ far = 100.0
 [node name="Cubes" type="Node3D" parent="."]
 script = ExtResource("3_vvh5c")
 
-[node name="SubViewport" type="SubViewport" parent="."]
+[node name="SubViewportFront" type="SubViewport" parent="."]
 own_world_3d = true
 transparent_bg = true
 render_target_clear_mode = 1
 render_target_update_mode = 1
 
-[node name="SubRoot" type="Node3D" parent="SubViewport"]
+[node name="SubRoot" type="Node3D" parent="SubViewportFront"]
 
-[node name="Camera3D" type="Camera3D" parent="SubViewport/SubRoot"]
+[node name="Camera3D" type="Camera3D" parent="SubViewportFront/SubRoot"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 environment = ExtResource("3_l8v81")
 projection = 1
 size = 8.0
 far = 100.0
 
-[node name="Cubes" type="Node3D" parent="SubViewport/SubRoot"]
+[node name="Cubes" type="Node3D" parent="SubViewportFront/SubRoot"]
+
+[node name="SubViewportRight" type="SubViewport" parent="."]
+own_world_3d = true
+transparent_bg = true
+render_target_clear_mode = 1
+render_target_update_mode = 1
+
+[node name="SubRoot" type="Node3D" parent="SubViewportRight"]
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportRight/SubRoot"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 10, 0, 0)
+environment = ExtResource("3_l8v81")
+projection = 1
+size = 8.0
+far = 100.0
+
+[node name="Cubes" type="Node3D" parent="SubViewportRight/SubRoot"]
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -97,7 +119,7 @@ alignment = 1
 
 [node name="Label" type="Label" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
 layout_mode = 2
-text = "Target"
+text = "Front"
 horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
@@ -120,6 +142,34 @@ color = Color(0.226862, 0.193208, 0.183853, 0.372549)
 custom_minimum_size = Vector2(192, 192)
 layout_mode = 2
 texture = SubResource("ViewportTexture_28aoi")
+expand_mode = 4
+stretch_mode = 5
+
+[node name="Label2" type="Label" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Right"
+horizontal_alignment = 1
+
+[node name="MarginContainer2" type="MarginContainer" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+size_flags_stretch_ratio = 0.2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer2"]
+custom_minimum_size = Vector2(192, 192)
+layout_mode = 2
+mouse_filter = 1
+color = Color(0.226862, 0.193208, 0.183853, 0.372549)
+
+[node name="TargetRect" type="TextureRect" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer2"]
+custom_minimum_size = Vector2(192, 192)
+layout_mode = 2
+texture = SubResource("ViewportTexture_bf3um")
 expand_mode = 4
 stretch_mode = 5
 

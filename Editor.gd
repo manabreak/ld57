@@ -4,6 +4,9 @@ extends Node3D
 var add_button: Button
 
 @export
+var add_cylinder_button: Button
+
+@export
 var remove_button: Button
 
 @export
@@ -14,12 +17,17 @@ var controller: GameController
 func _ready() -> void:
 	controller = get_parent() as GameController
 	add_button.pressed.connect(self.add_pressed)
+	add_cylinder_button.pressed.connect(self.add_cylinder_pressed)
 	remove_button.pressed.connect(self.remove_pressed)
 	print_button.pressed.connect(self.print_pressed)
 
 
 func add_pressed() -> void:
 	controller.add_new_cube()
+
+
+func add_cylinder_pressed() -> void:
+	controller.add_new_cylinder()
 
 
 func remove_pressed() -> void:

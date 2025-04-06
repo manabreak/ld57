@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3 uid="uid://c4ckh07pqlucb"]
+
+[ext_resource type="Script" uid="uid://cvj861bij8phw" path="res://RotateScript.gd" id="1_8gpye"]
+[ext_resource type="ArrayMesh" uid="uid://cik0ef3ophrox" path="res://assets/color_cylinder.obj" id="2_8gpye"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_oyfba"]
+height = 1.0
+
+[node name="ColorCylinder" type="Area3D"]
+script = ExtResource("1_8gpye")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+mesh = ExtResource("2_8gpye")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CylinderShape3D_oyfba")
+
+[connection signal="input_event" from="." to="." method="_on_input_event"]

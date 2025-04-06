@@ -5,6 +5,7 @@ const LEVELS = [
 	{
 		"targets": [
 			{
+				"type": "cube",
 				"pos": "(0.0, 0.0, 0.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			}
@@ -13,10 +14,12 @@ const LEVELS = [
 	{
 		"targets": [
 			{
+				"type": "cube",
 				"pos": "(-3.0, 0.0, -3.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			},
 			{
+				"type": "cube",
 				"pos": "(3.0, 0.0, 3.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			}
@@ -25,10 +28,12 @@ const LEVELS = [
 	{
 		"targets": [
 			{
+				"type": "cube",
 				"pos": "(2.5, 0.0, 0.0)",
 				"rot": "(-0.146446, 0.853554, -0.353553, 0.353553)"
 			},
 			{
+				"type": "cube",
 				"pos": "(0.0, 0.0, 0.0)",
 				"rot": "(-0.0, 1, 0.0, -0.0)"
 			}
@@ -38,37 +43,26 @@ const LEVELS = [
 	{
 		"targets": [
 			{
+				"type": "cube",
 				"pos": "(0.0, 1.0, -1.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			},
 			{
+				"type": "cube",
 				"pos": "(0.0, -1.0, 1.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			},
 			{
+				"type": "cube",
 				"pos": "(0.0, 0.0, 0.0)",
 				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
 			}
 		],
 		"container_rot_index": 3
 	},
-	{
-		"targets": [
-			{
-				"pos": "(1.5, 1.5, 0.0)",
-				"rot": "(0.0, 0.92388, -0.0, 0.382683)"
-			},
-			{
-				"pos": "(0.0, 0.0, 0.0)",
-				"rot": "(0.653282, 0.653281, 0.270598, 0.270598)"
-			},
-			{
-				"pos": "(-1.5, -1.5, 1.5)",
-				"rot": "(0.923879, 0.0, 0.382684, 0.0)"
-			}
-		],
-		"container_rot_index": 1
-	}
+	{ "targets": [{ "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(0.0, 0.92388, -0.0, 0.382683)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.653282, 0.653281, 0.270598, 0.270598)" }, { "type": "cube", "pos": "(-1.5, -1.5, 1.5)", "rot": "(0.923879, 0.0, 0.382684, 0.0)" }], "container_rot_index": 1 },
+	{ "targets": [{ "type": "cylinder", "pos": "(1.5, 0.0, 0.0)", "rot": "(0.270598, -0.653282, -0.270598, 0.653281)" }, { "type": "cube", "pos": "(-1.5, 0.0, 0.0)", "rot": "(0.270598, -0.653282, -0.270598, 0.653281)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.270598, 0.653282, -0.270598, 0.653282)" }], "container_rot_index": 0 },
+	{ "targets": [{ "type": "cylinder", "pos": "(1.5, 2.0, 1.5)", "rot": "(-0.0, -0.0, -0.707107, 0.707107)" }, { "type": "cube", "pos": "(-1.5, -2.0, 0.0)", "rot": "(0.5, -0.5, -0.5, 0.5)" }, { "type": "cube", "pos": "(0.0, 0.0, -1.5)", "rot": "(0.853554, -0.146446, -0.353553, -0.353553)" }], "container_rot_index": 3 }
 ]
 
 @export
@@ -76,6 +70,9 @@ var selection_sprite: Sprite2D
 
 @export
 var cube_scene: PackedScene
+
+@export
+var cylinder_scene: PackedScene
 
 @export
 var main_ui: Control
@@ -178,7 +175,9 @@ func show_level_completion_message() -> Signal:
 		1:
 			await show_message("Your relative performance seemed to slightly improve.", 4.0)
 			await pause(2.0)
-			return show_message("The next assignment requires you to manipulate\nall objects at the same time.\nUse Q and E keys to perform this.")
+			await show_message("The next assignment requires you to manipulate\nall objects at the same time.\nUse Q and E keys to perform this.")
+			await pause(2.0)
+			return show_message("When you have finished the manipulation,\nset your view to match the 'front' view.")
 		2:
 			await show_message("Recalibrating baseline...", 2.0)
 			await pause(2.0)
@@ -187,6 +186,12 @@ func show_level_completion_message() -> Signal:
 			await show_message("Improved depth perception capabilities recognized.\nIncreasing assessment difficulty...")
 			await pause(2.0)
 			return show_message("Employee capability class increased.\nPrevious class: F. Current class: D.")
+		4:
+			return show_message("Introducing new shape.\nEmployee heart rate seems to be slightly elevated.", 5.0)
+		5:
+			await show_message("LD57/HUMAN_42069 recognized the new shape.", 2.0)
+			await pause(2.0)
+			return show_message("Interesting. Proceeding with the assessment.", 2.0)
 	return get_tree().create_timer(0.1).timeout
 
 
@@ -226,6 +231,8 @@ func load_level(level: int) -> void:
 	var targets = data["targets"]
 	print("Target object count: " + str(targets.size()))
 	for target in targets:
+		var type: String = str(target.get("type", "cube"))
+		
 		var pos_str: String = str(target["pos"]).trim_prefix("(").trim_suffix(")")
 		var pos_parts = pos_str.split(", ")
 		var pos = Vector3(float(pos_parts[0]), float(pos_parts[1]), float(pos_parts[2]))
@@ -237,7 +244,11 @@ func load_level(level: int) -> void:
 		cube_targets.append(quat)
 		print("Solution: " + str(quat))
 		
-		var cube = cube_scene.instantiate() as RotateScript
+		var cube: RotateScript = null
+		if type == "cube":
+			cube = cube_scene.instantiate() as RotateScript
+		elif type == "cylinder":
+			cube = cylinder_scene.instantiate() as RotateScript
 		cube.position = pos
 		cube.solution = quat
 		cube.container_rot_index = 0
@@ -246,7 +257,8 @@ func load_level(level: int) -> void:
 		$Cubes.add_child(cube)
 		cube_states.append(false)
 	
-	render_solution(int(data.get("container_rot_index", 0)))
+	render_solution_front(int(data.get("container_rot_index", 0)))
+	render_solution_right(int(data.get("container_rot_index", 0)))
 	
 	if find_child("Editor") == null:
 		$Cubes.rotation.x = 0.0
@@ -262,6 +274,7 @@ func load_level(level: int) -> void:
 		tween.tween_property($Cubes, "scale", Vector3(1, 1, 1), 1.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 		tween.parallel()
 		tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE)
+		tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer2, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE)
 		
 		await tween.finished
 	$Cubes.slerping = true
@@ -269,6 +282,17 @@ func load_level(level: int) -> void:
 
 func add_new_cube() -> void:
 	var cube = cube_scene.instantiate() as RotateScript
+	cube.position = Vector3(0, 0, 0)
+	$Cubes.add_child(cube)
+	cube.rotated.connect(self.cube_rotated)
+	cube.clicked.connect(self.cube_clicked)
+	cube_clicked(cube)
+	cube_targets.append(Quaternion.IDENTITY)
+	cube_states.append(false)
+
+
+func add_new_cylinder() -> void:
+	var cube = cylinder_scene.instantiate() as RotateScript
 	cube.position = Vector3(0, 0, 0)
 	$Cubes.add_child(cube)
 	cube.rotated.connect(self.cube_rotated)
@@ -286,9 +310,9 @@ func remove_selected_cube() -> void:
 		current_selection = -1
 
 
-func render_solution(rot_index: int) -> void:
-	$SubViewport.render_target_update_mode = SubViewport.UPDATE_ONCE
-	var container = $SubViewport/SubRoot/Cubes as Node3D
+func render_solution_front(rot_index: int) -> void:
+	$SubViewportFront.render_target_update_mode = SubViewport.UPDATE_ONCE
+	var container = $SubViewportFront/SubRoot/Cubes as Node3D
 	container.rotation.y = rot_index * deg_to_rad(90)
 	
 	for child in container.get_children():
@@ -298,6 +322,7 @@ func render_solution(rot_index: int) -> void:
 	var data = LEVELS[current_level]
 	var targets = data["targets"]
 	for target in targets:
+		var type = str(target.get("type", "cube"))
 		var pos_str: String = str(target["pos"]).trim_prefix("(").trim_suffix(")")
 		var pos_parts = pos_str.split(", ")
 		var pos = Vector3(float(pos_parts[0]), float(pos_parts[1]), float(pos_parts[2]))
@@ -306,27 +331,55 @@ func render_solution(rot_index: int) -> void:
 		var parts = target_str.split(", ")
 		var quat = Quaternion(float(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]))
 		
-		var cube = cube_scene.instantiate() as RotateScript
+		var cube: RotateScript = null
+		if type == "cylinder":
+			cube = cylinder_scene.instantiate() as RotateScript
+		else:
+			cube = cube_scene.instantiate() as RotateScript
+		
+		cube.position = pos
+		cube.rotation = quat.get_euler()
+		container.add_child(cube)
+
+
+func render_solution_right(rot_index: int) -> void:
+	$SubViewportRight.render_target_update_mode = SubViewport.UPDATE_ONCE
+	var container = $SubViewportRight/SubRoot/Cubes as Node3D
+	container.rotation.y = rot_index * deg_to_rad(90)
+	
+	for child in container.get_children():
+		container.remove_child(child)
+		child.queue_free()
+	
+	var data = LEVELS[current_level]
+	var targets = data["targets"]
+	for target in targets:
+		var type = str(target.get("type", "cube"))
+		var pos_str: String = str(target["pos"]).trim_prefix("(").trim_suffix(")")
+		var pos_parts = pos_str.split(", ")
+		var pos = Vector3(float(pos_parts[0]), float(pos_parts[1]), float(pos_parts[2]))
+		
+		var target_str: String = str(target["rot"]).trim_prefix("(").trim_suffix(")")
+		var parts = target_str.split(", ")
+		var quat = Quaternion(float(parts[0]), float(parts[1]), float(parts[2]), float(parts[3]))
+		
+		var cube: RotateScript = null
+		if type == "cylinder":
+			cube = cylinder_scene.instantiate() as RotateScript
+		else:
+			cube = cube_scene.instantiate() as RotateScript
+		
 		cube.position = pos
 		cube.rotation = quat.get_euler()
 		container.add_child(cube)
 
 
 func cube_rotated(cube: RotateScript) -> void:
-	print("Cube is now rotated to: " + str(cube.target_rotation) + " and its goal is " + str(cube.solution))
-	
 	var index = cube.get_index()
-	print("Cube index: " + str(index))
-	
 	var target = cube_targets[index]
-	print("Target: " + str(target))
-	
-	print("Is correct? " + str(is_correct(cube)))
 	cube_states[index] = is_correct(cube)
 	
 	var level_complete = check_if_level_complete()
-	print("Level complete? " + str(level_complete))
-	
 	if level_complete and find_child("Editor") == null:
 		change_level()
 
@@ -344,6 +397,7 @@ func change_level() -> void:
 	pre_tween.set_parallel()
 	pre_tween.tween_property($Cubes, "rotation:x", PI / 4.0, 2.0).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_SINE)
 	pre_tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE)
+	pre_tween.tween_property($CanvasLayer/UI/HBoxContainer/VBoxContainer/MarginContainer2, "modulate:a", 0.0, 1.0).set_trans(Tween.TRANS_SINE)
 	await pre_tween.finished
 	
 	var tween = create_tween()
@@ -363,29 +417,25 @@ func change_level() -> void:
 	var timer = get_tree().create_timer(1.0)
 	await timer.timeout
 	
-	# $Cubes.rotation.y = 0.0
-	# $Cubes.scale = Vector3(1, 1, 1)
 	if current_level < LEVELS.size() - 1:
 		await show_level_completion_message()
 		load_level(current_level + 1)
 	else:
-		print("All levels completed!")
-		
 		title_label.visible_ratio = 0.0
 		title_label.text = "//ASSESSMENT/LD57/HUMAN_42069/COMPLETE"
 		
 		var title_end_tween = create_tween()
 		title_end_tween.tween_property(title_label, "visible_ratio", 1.0, 2.0)
 		
+		await show_message("You have performed adequately during your assessment.\nThe results will be used to calibrate your NCP score.")
+		await get_tree().create_timer(2.0).timeout
+		
 		var end_tween = create_tween()
 		end_tween.set_parallel()
 		end_tween.tween_property(main_ui, "modulate:a", 0.0, 2.0)
 		end_tween.tween_property(title_label, "modulate:a", 0.0, 2.2)
 		
-		await show_message("You have performed adequately during your assessment.\nThe results will be used to calibrate your NCP score.")
-		await get_tree().create_timer(2.0).timeout
 		await show_message("You are dismissed.\nThank you for your participation.", 4.0)
-	
 
 
 func _process(delta: float) -> void:
@@ -437,8 +487,10 @@ func is_correct(cube: RotateScript) -> bool:
 	var target = cube_targets[index] as Quaternion
 	var quat = cube.target_rotation
 	
-	return abs(quat.dot(target)) >= 1.0 - 0.001
-	# return quat.is_equal_approx(target)
+	var result = abs(quat.dot(target)) >= 1.0 - 0.001 or quat.is_equal_approx(target) or quat.is_equal_approx(-target)
+	if result == false:
+		print("Not same; Cube is " + str(quat) + " === target is " + str(target))
+	return result
 
 
 func print_level() -> void:
@@ -447,6 +499,10 @@ func print_level() -> void:
 	for cube in $Cubes.get_children():
 		if cube is Node3D:
 			var c = {}
+			if cube.name.begins_with("ColorCylinder"):
+				c["type"] = "cylinder"
+			else:
+				c["type"] = "cube"
 			c["pos"] = str(cube.position)
 			c["rot"] = str(cube.transform.basis.get_rotation_quaternion())
 			o["targets"].append(c)
