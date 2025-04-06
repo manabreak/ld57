@@ -2,67 +2,23 @@ class_name GameController
 extends Node3D
 
 const LEVELS = [
-	{
-		"targets": [
-			{
-				"type": "cube",
-				"pos": "(0.0, 0.0, 0.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			}
-		]
-	},
-	{
-		"targets": [
-			{
-				"type": "cube",
-				"pos": "(-3.0, 0.0, -3.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			},
-			{
-				"type": "cube",
-				"pos": "(3.0, 0.0, 3.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			}
-		]
-	},
-	{
-		"targets": [
-			{
-				"type": "cube",
-				"pos": "(2.5, 0.0, 0.0)",
-				"rot": "(-0.146446, 0.853554, -0.353553, 0.353553)"
-			},
-			{
-				"type": "cube",
-				"pos": "(0.0, 0.0, 0.0)",
-				"rot": "(-0.0, 1, 0.0, -0.0)"
-			}
-		],
-		"container_rot_index": 1
-	},
-	{
-		"targets": [
-			{
-				"type": "cube",
-				"pos": "(0.0, 1.0, -1.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			},
-			{
-				"type": "cube",
-				"pos": "(0.0, -1.0, 1.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			},
-			{
-				"type": "cube",
-				"pos": "(0.0, 0.0, 0.0)",
-				"rot": "(0.353553, 0.353553, 0.146447, 0.853553)"
-			}
-		],
-		"container_rot_index": 3
-	},
+	{ "targets": [{ "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }]},
+	{ "targets": [{ "type": "cube", "pos": "(-3.0, 0.0, -3.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }, { "type": "cube", "pos": "(3.0, 0.0, 3.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }]},
+	{ "targets": [{ "type": "cube", "pos": "(2.5, 0.0, 0.0)", "rot": "(-0.146446, 0.853554, -0.353553, 0.353553)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.0, 1, 0.0, -0.0)" }], "container_rot_index": 1 },
+	{ "targets": [{ "type": "cube", "pos": "(0.0, 1.0, -1.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }, { "type": "cube", "pos": "(0.0, -1.0, 1.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.353553, 0.353553, 0.146447, 0.853553)" }], "container_rot_index": 3 },
 	{ "targets": [{ "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(0.0, 0.92388, -0.0, 0.382683)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.653282, 0.653281, 0.270598, 0.270598)" }, { "type": "cube", "pos": "(-1.5, -1.5, 1.5)", "rot": "(0.923879, 0.0, 0.382684, 0.0)" }], "container_rot_index": 1 },
 	{ "targets": [{ "type": "cylinder", "pos": "(1.5, 0.0, 0.0)", "rot": "(0.270598, -0.653282, -0.270598, 0.653281)" }, { "type": "cube", "pos": "(-1.5, 0.0, 0.0)", "rot": "(0.270598, -0.653282, -0.270598, 0.653281)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.270598, 0.653282, -0.270598, 0.653282)" }], "container_rot_index": 0 },
-	{ "targets": [{ "type": "cylinder", "pos": "(1.5, 2.0, 1.5)", "rot": "(-0.0, -0.0, -0.707107, 0.707107)" }, { "type": "cube", "pos": "(-1.5, -2.0, 0.0)", "rot": "(0.5, -0.5, -0.5, 0.5)" }, { "type": "cube", "pos": "(0.0, 0.0, -1.5)", "rot": "(0.853554, -0.146446, -0.353553, -0.353553)" }], "container_rot_index": 3 }
+	{ "targets": [{ "type": "cylinder", "pos": "(1.5, 2.0, 1.5)", "rot": "(-0.0, -0.0, -0.707107, 0.707107)" }, { "type": "cube", "pos": "(-1.5, -2.0, 0.0)", "rot": "(0.5, -0.5, -0.5, 0.5)" }, { "type": "cube", "pos": "(0.0, 0.0, -1.5)", "rot": "(0.853554, -0.146446, -0.353553, -0.353553)" }], "container_rot_index": 3 },
+	{ "targets": [{ "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(-0.353553, 0.146447, 0.353553, 0.853553)" }, { "type": "cylinder", "pos": "(0.0, 1.5, -1.5)", "rot": "(-0.0, 0.923879, -0.382684, -0.0)" }, { "type": "cube", "pos": "(-1.5, 1.5, 0.0)", "rot": "(-0.146446, 0.853554, 0.353553, -0.353553)" }, { "type": "cube", "pos": "(-1.5, 1.5, -1.5)", "rot": "(-0.146447, 0.853553, 0.353554, -0.353553)" }], "container_rot_index": 2 },
+	{ "targets": [{ "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(-0.0, 0.707107, 0.5, 0.5)" }, { "type": "cylinder", "pos": "(0.0, -1.5, -1.5)", "rot": "(0.653282, 0.270598, -0.653281, 0.270598)" }, { "type": "cube", "pos": "(-1.5, 1.5, 0.0)", "rot": "(0.353553, 0.146447, 0.853553, -0.353554)" }, { "type": "cube", "pos": "(-1.5, -1.5, -1.5)", "rot": "(-0.653282, 0.270598, -0.270598, 0.653281)" }], "container_rot_index": 2 },
+	{ "targets": [{ "type": "cylinder", "pos": "(0.0, 1.5, 0.0)", "rot": "(0, 0.707106, 0, 0.707107)" }, { "type": "cube", "pos": "(0.0, -1.5, 0.0)", "rot": "(0, -0.707107, 0, 0.707107)" }, { "type": "cube", "pos": "(1.5, -0.5, 0.0)", "rot": "(0.707106, 0, 0, 0.707107)" }, { "type": "cube", "pos": "(-1.5, 0.5, 0.0)", "rot": "(-0.5, 0.5, -0.5, 0.5)" }], "container_rot_index": 1 },
+	{ "targets": [{ "type": "cylinder", "pos": "(-1.5, 1.5, 0.0)", "rot": "(-0.653281, -0.270598, 0.270598, 0.653282)" }, { "type": "cube", "pos": "(1.5, -1.5, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(1.5, -0.5, 1.0)", "rot": "(0.270599, 0.653281, 0.653281, 0.270598)" }, { "type": "cube", "pos": "(-1.5, 0.5, -1.0)", "rot": "(0.5, 0.5, -0.5, -0.5)" }], "container_rot_index": 2 },
+	{ "targets": [{ "type": "cube", "pos": "(1.5, -0.5, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(-1.5, 0.5, 0.0)", "rot": "(-0.0, -0.707107, 0.707107, 0.0)" }, { "type": "cube", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.0, -0.0, -0.382683, 0.92388)" }], "container_rot_index": 2 },
+	{ "targets": [{ "type": "cube", "pos": "(1.5, 0.0, 0.0)", "rot": "(-0.0, 0.707107, 0.707107, -0.0)" }, { "type": "cube", "pos": "(-1.5, 0.0, 0.0)", "rot": "(0.0, -0.0, -0.382683, 0.92388)" }, { "type": "cube", "pos": "(1.5, 1.5, 0.0)", "rot": "(-0.146447, 0.353554, 0.353553, 0.853553)" }, { "type": "cylinder", "pos": "(-1.5, 1.5, 0.0)", "rot": "(0.5, 0.5, 0.5, 0.5)" }], "container_rot_index": 2 },
+	{ "targets": [{ "type": "cone", "pos": "(0.0, 0.0, 0.0)", "rot": "(-0.0, 0.707107, -0.0, 0.707107)" }, { "type": "cube", "pos": "(1.0, 0.0, 0.0)", "rot": "(0.707107, -0.0, -0.707106, -0.0)" }, { "type": "cube", "pos": "(-1.0, 0.0, 0.0)", "rot": "(-0.707107, 0.0, 0.707107, -0.0)" }], "container_rot_index": 0 },
+	{ "targets": [{ "type": "cone", "pos": "(0.0, 1.0, 0.0)", "rot": "(0.5, 0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(0.5, 0.0, 0.0)", "rot": "(0.5, -0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(-0.5, 0.0, 0.0)", "rot": "(-0.5, -0.5, 0.5, -0.5)" }, { "type": "cube", "pos": "(0.0, -1.0, 0.0)", "rot": "(-0.5, 0.5, -0.5, 0.5)" }], "container_rot_index": 1 },
+	{ "targets": [{ "type": "cone", "pos": "(0.0, 0.0, -1.0)", "rot": "(0.707107, -0.707106, 0.0, 0.0)" }, { "type": "cube", "pos": "(0.5, 0.0, 0.0)", "rot": "(0.5, -0.5, 0.5, 0.5)" }, { "type": "cube", "pos": "(-0.5, 0.0, 0.0)", "rot": "(-0.5, -0.5, 0.5, -0.5)" }, { "type": "cube", "pos": "(0.0, 0.0, 1.0)", "rot": "(-0.707107, 0.707107, 0.0, -0.0)" }], "container_rot_index": 3 },
+	{ "targets": [{ "type": "cylinder", "pos": "(0.0, 0.0, 0.0)", "rot": "(0.382683, 0, 0, 0.92388)" }, { "type": "cube", "pos": "(1.5, 0.0, 0.0)", "rot": "(0.653281, 0.653281, -0.270599, 0.270598)" }, { "type": "cube", "pos": "(0.0, 0.0, 1.5)", "rot": "(0.270598, 0.653281, 0.653282, 0.270598)" }], "container_rot_index": 1 }
 ]
 
 @export
@@ -73,6 +29,9 @@ var cube_scene: PackedScene
 
 @export
 var cylinder_scene: PackedScene
+
+@export
+var cone_scene: PackedScene
 
 @export
 var main_ui: Control
@@ -115,7 +74,7 @@ func start_script_seq() -> void:
 	title_label.text = ""
 	desc_label.text = ""
 	
-	await pause(2.0)
+	await pause()
 	
 	## First message
 	
@@ -129,13 +88,13 @@ func start_script_seq() -> void:
 	await pause(1.0)
 	
 	await show_message("Welcome, initiate LD57/HUMAN_42069.\nToday, you are participating in our\nneural conditioning program, or NCP for short.")
-	await pause(2.0)
+	await pause()
 	await show_message("During NCP, your capabilities concerning depth perception are analyzed.\nAll adequately performing individuals will be rewarded.")
-	await pause(2.0)
+	await pause()
 	await show_message("It is expected that approximately 57% of participants will fail the assessment.\nAll failures will go on your permanent record.")
-	await pause(2.0)
+	await pause()
 	await show_message("Beginning baseline calibration...", 3.0)
-	await pause(2.0)
+	await pause()
 	
 	tween = create_tween()
 	tween.tween_property(main_ui, "modulate:a", 1.0, 3.0).set_trans(Tween.TRANS_SPRING)
@@ -143,55 +102,65 @@ func start_script_seq() -> void:
 	
 	await show_message("Baseline calibrated.\nLoading assessments and relevant instructions...", 4.0)
 	load_level(0)
-	await pause(2.0)
+	await pause()
 	await show_message("Note: If you require assistance, refer to your employee manual.\nYou have received your manual during your orientation.")
-	await pause(2.0)
+	await pause()
 	await show_message("If you do not have your employee manual,\nreport to the sanctioning committee immediately.")
-	await pause(2.0)
+	await pause()
 	await show_message("Your assignments are shown on the left side of the screen.\nTo pass an assignment, manipulate the view on the right side\nto match the assignment.")
-	await pause(2.0)
+	await pause()
 	await show_message("Use mouse to select an object.\nUse W/A/S/D or arrow keys to manipulate the object.")
-	await pause(2.0)
+	await pause()
 
 
-func pause(time: float) -> Signal:
+func pause(time: float = 2.0) -> Signal:
 	return get_tree().create_timer(time).timeout
 
 
-func show_message(text: String, time: float = 8.0) -> Signal:
+var desc_label_tween: Tween = null
+
+func show_message(text: String, time: float = 1.0) -> Signal:
+	if desc_label_tween != null:
+		desc_label_tween.stop()
+	
 	desc_label.visible_ratio = 0.0
 	desc_label.text = text
-	var tween = create_tween()
-	tween.tween_property(desc_label, "visible_ratio", 1.0, time)
-	return tween.finished
+	desc_label_tween = create_tween()
+	desc_label_tween.tween_property(desc_label, "visible_ratio", 1.0, time)
+	return desc_label_tween.finished
 
 
 func show_level_completion_message() -> Signal:
 	match current_level:
 		0:
 			await show_message("Completing the first task took you\n48% longer compared to an average individual.\nThis performance will be logged.")
-			await pause(2.0)
+			await pause()
 			return show_message("Proceed with the next assignment.\nYou can use TAB key to cycle the selections.", 5.0)
 		1:
-			await show_message("Your relative performance seemed to slightly improve.", 4.0)
-			await pause(2.0)
+			await show_message("Your relative performance seemed to slightly improve.\nStatistically, this is meaningless.", 5.0)
+			await pause()
 			await show_message("The next assignment requires you to manipulate\nall objects at the same time.\nUse Q and E keys to perform this.")
-			await pause(2.0)
+			await pause()
 			return show_message("When you have finished the manipulation,\nset your view to match the 'front' view.")
 		2:
 			await show_message("Recalibrating baseline...", 2.0)
-			await pause(2.0)
+			await pause()
 			return show_message("Baseline recalibrated.\nProceed with the next assignment.", 4.0)
 		3:
 			await show_message("Improved depth perception capabilities recognized.\nIncreasing assessment difficulty...")
-			await pause(2.0)
+			await pause()
 			return show_message("Employee capability class increased.\nPrevious class: F. Current class: D.")
 		4:
+			$CanvasLayer/UI.target_hr = 80
 			return show_message("Introducing new shape.\nEmployee heart rate seems to be slightly elevated.", 5.0)
 		5:
 			await show_message("LD57/HUMAN_42069 recognized the new shape.", 2.0)
-			await pause(2.0)
+			await pause()
 			return show_message("Interesting. Proceeding with the assessment.", 2.0)
+		6:
+			return show_message("Employee is performing adequately.")
+		7:
+			return show_message("The performance of HUMAN_42069 might be statistically significant.\nMore results are needed.")
 	return get_tree().create_timer(0.1).timeout
 
 
@@ -249,6 +218,8 @@ func load_level(level: int) -> void:
 			cube = cube_scene.instantiate() as RotateScript
 		elif type == "cylinder":
 			cube = cylinder_scene.instantiate() as RotateScript
+		elif type == "cone":
+			cube = cone_scene.instantiate() as RotateScript
 		cube.position = pos
 		cube.solution = quat
 		cube.container_rot_index = 0
@@ -302,6 +273,17 @@ func add_new_cylinder() -> void:
 	cube_states.append(false)
 
 
+func add_new_cone() -> void:
+	var cube = cone_scene.instantiate() as RotateScript
+	cube.position = Vector3(0, 0, 0)
+	$Cubes.add_child(cube)
+	cube.rotated.connect(self.cube_rotated)
+	cube.clicked.connect(self.cube_clicked)
+	cube_clicked(cube)
+	cube_targets.append(Quaternion.IDENTITY)
+	cube_states.append(false)
+
+
 func remove_selected_cube() -> void:
 	if current_selection >= 0:
 		var cube = $Cubes.get_child(current_selection)
@@ -334,6 +316,8 @@ func render_solution_front(rot_index: int) -> void:
 		var cube: RotateScript = null
 		if type == "cylinder":
 			cube = cylinder_scene.instantiate() as RotateScript
+		elif type == "cone":
+			cube = cone_scene.instantiate() as RotateScript
 		else:
 			cube = cube_scene.instantiate() as RotateScript
 		
@@ -366,6 +350,8 @@ func render_solution_right(rot_index: int) -> void:
 		var cube: RotateScript = null
 		if type == "cylinder":
 			cube = cylinder_scene.instantiate() as RotateScript
+		elif type == "cone":
+			cube = cone_scene.instantiate() as RotateScript
 		else:
 			cube = cube_scene.instantiate() as RotateScript
 		
@@ -386,6 +372,7 @@ func cube_rotated(cube: RotateScript) -> void:
 
 func change_level() -> void:
 	unselect()
+	$CanvasLayer/UI.level_completed(current_level)
 	
 	var t0 = get_tree().create_timer(1.5)
 	await t0.timeout
@@ -446,6 +433,8 @@ func _process(delta: float) -> void:
 		cube_clicked($Cubes.get_children().get(current_selection))
 	elif Input.is_action_just_pressed("clear_selection"):
 		unselect()
+	elif Input.is_action_just_pressed("reset"):
+		load_level(current_level)
 	
 	if current_selection >= 0:
 		var cube = $Cubes.get_child(current_selection)
@@ -501,6 +490,8 @@ func print_level() -> void:
 			var c = {}
 			if cube.name.begins_with("ColorCylinder"):
 				c["type"] = "cylinder"
+			elif cube.name.begins_with("ColorCone"):
+				c["type"] = "cone"
 			else:
 				c["type"] = "cube"
 			c["pos"] = str(cube.position)

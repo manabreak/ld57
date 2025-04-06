@@ -1,10 +1,11 @@
-[gd_scene load_steps=9 format=3 uid="uid://c8doxassgmjo0"]
+[gd_scene load_steps=10 format=3 uid="uid://c8doxassgmjo0"]
 
 [ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_miuv6"]
 [ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_4farl"]
 [ext_resource type="Script" uid="uid://umefapykmq2f" path="res://Editor.gd" id="3_4farl"]
 [ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_u007t"]
 [ext_resource type="PackedScene" uid="uid://c4ckh07pqlucb" path="res://ColorCylinder.tscn" id="3_v0uwa"]
+[ext_resource type="PackedScene" uid="uid://dwqotjpg4hq15" path="res://ColorCone.tscn" id="4_0ch18"]
 [ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_v0uwa"]
 
 [sub_resource type="Environment" id="Environment_vvh5c"]
@@ -20,11 +21,13 @@ script = ExtResource("1_miuv6")
 selection_sprite = NodePath("CanvasLayer/SelectionSprite")
 cube_scene = ExtResource("2_4farl")
 cylinder_scene = ExtResource("3_v0uwa")
+cone_scene = ExtResource("4_0ch18")
 
-[node name="Editor" type="Node3D" parent="." node_paths=PackedStringArray("add_button", "add_cylinder_button", "remove_button", "print_button")]
+[node name="Editor" type="Node3D" parent="." node_paths=PackedStringArray("add_button", "add_cylinder_button", "add_cone_button", "remove_button", "print_button")]
 script = ExtResource("3_4farl")
 add_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer/AddButton")
 add_cylinder_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer2/AddButton")
+add_cone_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer2/AddButton2")
 remove_button = NodePath("../CanvasLayer/DebugMenu/HBoxContainer/RemoveButton")
 print_button = NodePath("../CanvasLayer/DebugMenu/PrintSolutionButton")
 
@@ -112,7 +115,12 @@ layout_mode = 2
 [node name="AddButton" type="Button" parent="CanvasLayer/DebugMenu/HBoxContainer2"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Add"
+text = "Add Cylinder"
+
+[node name="AddButton2" type="Button" parent="CanvasLayer/DebugMenu/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Add Cone"
 
 [node name="PrintSolutionButton" type="Button" parent="CanvasLayer/DebugMenu"]
 layout_mode = 2

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://kf060nswrhuh"]
+[gd_scene load_steps=16 format=3 uid="uid://kf060nswrhuh"]
 
 [ext_resource type="Script" uid="uid://cc7l2wp0425es" path="res://GameController.gd" id="1_pyidc"]
 [ext_resource type="PackedScene" uid="uid://dcsvujn42pf87" path="res://ColorCube.tscn" id="2_pyidc"]
@@ -6,8 +6,10 @@
 [ext_resource type="Environment" uid="uid://bsujjcienvhi4" path="res://assets/env.tres" id="3_l8v81"]
 [ext_resource type="Script" uid="uid://cpli0mlj3x8xu" path="res://Cubes.gd" id="3_vvh5c"]
 [ext_resource type="Texture2D" uid="uid://cb172j0elo170" path="res://assets/selection.png" id="4_28aoi"]
+[ext_resource type="PackedScene" uid="uid://dwqotjpg4hq15" path="res://ColorCone.tscn" id="4_tw3kd"]
 [ext_resource type="Theme" uid="uid://bp8bw3kss3ym2" path="res://assets/theme.tres" id="5_jnlp7"]
 [ext_resource type="Shader" uid="uid://cp7brdoqgajcj" path="res://Vignette.gdshader" id="7_vyht1"]
+[ext_resource type="Script" uid="uid://b5alxsbtjf5pw" path="res://ui.gd" id="8_huihk"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_28aoi"]
 viewport_path = NodePath("SubViewportFront")
@@ -27,7 +29,7 @@ shader_parameter/dg = Vector2(0, 1)
 shader_parameter/db = Vector2(-1, 0)
 shader_parameter/width = 0.5
 shader_parameter/height = 0.7
-shader_parameter/curvature = 2.01
+shader_parameter/curvature = 0.81
 shader_parameter/noise_texture = SubResource("NoiseTexture2D_bf3um")
 
 [node name="Root" type="Node3D" node_paths=PackedStringArray("selection_sprite", "main_ui", "title_label", "desc_label")]
@@ -35,6 +37,7 @@ script = ExtResource("1_pyidc")
 selection_sprite = NodePath("CanvasLayer/SelectionSprite")
 cube_scene = ExtResource("2_pyidc")
 cylinder_scene = ExtResource("3_bf3um")
+cone_scene = ExtResource("4_tw3kd")
 main_ui = NodePath("CanvasLayer/UI/HBoxContainer")
 title_label = NodePath("CanvasLayer/UI/MarginContainer/LevelName")
 desc_label = NodePath("CanvasLayer/UI/DialogueMargins/DialogueLabel")
@@ -45,7 +48,7 @@ visible = false
 sky_mode = 1
 
 [node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 10)
 environment = ExtResource("3_l8v81")
 projection = 1
 size = 10.0
@@ -95,15 +98,20 @@ modulate = Color(0.690196, 1, 0.654902, 1)
 position = Vector2(40, 119)
 texture = ExtResource("4_28aoi")
 
-[node name="UI" type="Control" parent="CanvasLayer"]
+[node name="UI" type="Control" parent="CanvasLayer" node_paths=PackedStringArray("info_value", "classification_value", "score_value", "vitals_value")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
 theme = ExtResource("5_jnlp7")
+script = ExtResource("8_huihk")
+info_value = NodePath("HBoxContainer/MarginContainer/FlairVBox/InfoValue")
+classification_value = NodePath("HBoxContainer/MarginContainer/FlairVBox/ClassificationValue")
+score_value = NodePath("HBoxContainer/MarginContainer/FlairVBox/ScoreValue")
+vitals_value = NodePath("HBoxContainer/MarginContainer/FlairVBox/VitalsValue")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -173,10 +181,76 @@ texture = SubResource("ViewportTexture_bf3um")
 expand_mode = 4
 stretch_mode = 5
 
+[node name="ResetInstructions" type="Label" parent="CanvasLayer/UI/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+text = "Press 'R' to reset"
+horizontal_alignment = 1
+
 [node name="Control" type="Control" parent="CanvasLayer/UI/HBoxContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
 size_flags_vertical = 3
 mouse_filter = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="FlairVBox" type="GridContainer" parent="CanvasLayer/UI/HBoxContainer/MarginContainer"]
+custom_minimum_size = Vector2(192, 0)
+layout_mode = 2
+columns = 2
+
+[node name="InfoLabel" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+text = "ID//LD57"
+uppercase = true
+
+[node name="InfoValue" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+text = "HUMAN"
+uppercase = true
+
+[node name="ClassificationLabel" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Classification"
+uppercase = true
+
+[node name="ClassificationValue" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+text = "F"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="ScoreLabel" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Ass. Score"
+uppercase = true
+
+[node name="ScoreValue" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+text = "0"
+horizontal_alignment = 2
+uppercase = true
+
+[node name="VitalsLabel" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "HR"
+uppercase = true
+
+[node name="VitalsValue" type="Label" parent="CanvasLayer/UI/HBoxContainer/MarginContainer/FlairVBox"]
+layout_mode = 2
+text = "N/A"
+horizontal_alignment = 2
+uppercase = true
 
 [node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -191,6 +265,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 32
 text = "// ASSESS/0.1/LD57/PARTICIPANT_00"
 horizontal_alignment = 1
+visible_characters_behavior = 3
 
 [node name="DialogueMargins" type="MarginContainer" parent="CanvasLayer/UI"]
 layout_mode = 1
@@ -209,6 +284,7 @@ theme_override_constants/margin_bottom = 20
 [node name="DialogueLabel" type="Label" parent="CanvasLayer/UI/DialogueMargins"]
 custom_minimum_size = Vector2(0, 128)
 layout_mode = 2
+mouse_filter = 1
 text = "Begin assessment."
 horizontal_alignment = 1
 max_lines_visible = 3
@@ -223,4 +299,4 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
+mouse_filter = 1
